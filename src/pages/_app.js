@@ -1,5 +1,9 @@
-import '@/styles/globals.css'
+import { ContextFunctions } from "@/context/AuthContext"
 
 export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <ContextFunctions>
+      <Component {...pageProps} />
+    </ContextFunctions>
+  )
 }
