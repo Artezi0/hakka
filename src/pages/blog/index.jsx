@@ -2,7 +2,6 @@ import { ContextProvider } from "@/context/AuthContext"
 import { useState } from "react"
 import { category } from "./data"
 import TextEditor from "./TextEditor"
-import Select from "react-select"
 import uuid from "react-uuid"
 import Link from "next/link"
 
@@ -26,7 +25,7 @@ export default function Blog() {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({ heading: false }),
       TiptapLink,
       TiptapHeading,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
@@ -75,7 +74,6 @@ export default function Blog() {
     try {
       await handleBlog(data)
       console.table(data)
-      // location.reload()
     } catch(err) {
       console.log(err)
     }
@@ -91,14 +89,13 @@ export default function Blog() {
         <input type="text" name="author" placeholder="Author" onChange={handleChange}/> <br />
         <input type="file" name="thumbnail" onChange={uploadThumb}/>
         {imageURL && <img src={imageURL} alt="preview-thumbnail" width={300}/>}
-        <Select 
+        {/* <Select 
           isMulti
           name="category"
           options={category}
           className="basic-multi-select"
           classNamePrefix="select"
-          
-        /> <br />
+        /> <br /> */}
         <RichTextEditor editor={editor}>
           <TextEditor />
         </RichTextEditor>
