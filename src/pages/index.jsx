@@ -15,8 +15,6 @@ export default function Home() {
         <ul>
           <li><Link href='/campaign'>Campaign</Link></li>
           <li><Link href='/blog'>Blog</Link></li>
-          {/* <li><Link href='/volume'>Volume</Link></li>
-          <li><Link href='/set'>Set</Link></li> */}
         </ul>
       </main>
     </>

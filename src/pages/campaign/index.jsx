@@ -13,12 +13,15 @@ export default function Campaign() {
       image: imageURL,
       redirectURL: credential,
     }
-
-    try {
-      await handleCampaign(data)
-      location.reload()
-    } catch(err) {
-      console.log(err)
+    if (imageURL != undefined) {
+      try {
+        await handleCampaign(data)
+        console.table(data)
+      } catch(err) {
+        console.log(err)
+      }
+    } else {
+      console.log('Ada error')
     }
   }
 

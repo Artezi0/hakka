@@ -1,7 +1,5 @@
 import { ContextProvider } from "@/context/AuthContext"
 import { useState } from "react"
-import { category } from "./data"
-import TextEditor from "./TextEditor"
 import uuid from "react-uuid"
 import Link from "next/link"
 
@@ -69,7 +67,6 @@ export default function Blog() {
       thumbnail: imageURL,
       isFeatured: featured,
     }
-
     
     try {
       await handleBlog(data)
@@ -88,16 +85,36 @@ export default function Blog() {
         <input type="text" name="title" placeholder="Title" onChange={handleChange}/> <br />
         <input type="text" name="author" placeholder="Author" onChange={handleChange}/> <br />
         <input type="file" name="thumbnail" onChange={uploadThumb}/>
-        {imageURL && <img src={imageURL} alt="preview-thumbnail" width={300}/>}
-        {/* <Select 
-          isMulti
-          name="category"
-          options={category}
-          className="basic-multi-select"
-          classNamePrefix="select"
-        /> <br /> */}
+        {imageURL && 
+          <img src={imageURL} alt="preview-thumbnail" width={300}/>
+        }
         <RichTextEditor editor={editor}>
-          <TextEditor />
+          <RichTextEditor.Toolbar sticky stickyOffset={60}>
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.ClearFormatting />
+            <RichTextEditor.Bold />
+            <RichTextEditor.Italic />
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.H1 />
+            <RichTextEditor.H2 />
+            <RichTextEditor.H3 />
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.Link />
+            <RichTextEditor.Unlink />
+          </RichTextEditor.ControlsGroup> 
+         
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.AlignLeft />
+            <RichTextEditor.AlignCenter />
+            <RichTextEditor.AlignJustify />
+            <RichTextEditor.AlignRight />
+          </RichTextEditor.ControlsGroup>
+        </RichTextEditor.Toolbar>
+      <RichTextEditor.Content />
         </RichTextEditor>
         <label htmlFor="featured">Featured</label>
         <input type="checkbox" id="featured" name="featured" onChange={() => isFeatured(!featured)}/> <br />
