@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { setDoc, collection, onSnapshot, updateDoc, doc } from "firebase/firestore"
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage" 
-import { db, storage } from "./Firebase"
+import { ref, deleteObject } from "firebase/storage"
+import { db, storage  } from "./Firebase"
 import uuid from "react-uuid"
 
 const Context = createContext()
@@ -9,26 +9,14 @@ const Context = createContext()
 export function ContextFunctions({ children }) {
   const [ imageURL, setImageURL ] = useState()
 
-  // Handle image uploads
-  async function handleImageUpload(path, file) {
-    const parentRef = ref(storage, path)
-    const imageRef = ref(parentRef, uuid())
-
-    return uploadBytes(imageRef, file)
-      .then(() => {
-        getDownloadURL(imageRef)
-          .then((url) => {
-            setImageURL(url)
-          })
-      })
-  }
-
   // Upload campaign
   async function handleCampaign(data) {
     return setDoc(doc(db, "campaign", data.uid), { 
       image : data.image,
       url : data.redirectURL,
       uid : data.uid
+    }).then(() => {
+      console.table(data)
     })
   }
 
@@ -42,20 +30,23 @@ export function ContextFunctions({ children }) {
       content: data.content,
       thumbnail: data.thumbnail,
       isFeatured: data.isFeatured, 
+    }).then(() => {
+      console.table(data)
     })
+  }
+
+  async function handleAbort(path, fileUID) {
+    const parrentRef = ref(storage, path)
+    const objectRef = ref(parrentRef, fileUID)
+
+    return deleteObject(objectRef)
   }
 
   return (
     <Context.Provider value={{
-      // Handle image
-      imageURL,
-      handleImageUpload,
-
-      // Handle campaign
       handleCampaign,
-
-      // Handle blog
       handleBlog,
+      handleAbort,
     }}>{ children }</Context.Provider>
   )
 }

@@ -2,6 +2,8 @@ import { ContextProvider } from "@/context/AuthContext"
 import { useState } from "react"
 import uuid from "react-uuid"
 import Link from "next/link"
+import { storage } from "@/context/Firebase"
+import { uploadBytes, getDownloadURL, ref } from "firebase/storage"
 
 import { RichTextEditor } from "@mantine/tiptap"
 import { useEditor } from '@tiptap/react';
@@ -10,11 +12,14 @@ import { Heading as TiptapHeading } from "@tiptap/extension-heading";
 import TextAlign from "@tiptap/extension-text-align";
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from "@tiptap/extension-placeholder";
+import Image from "next/legacy/image"
 
 export default function Blog() {
-  const { handleImageUpload, handleBlog, imageURL } = ContextProvider()
+  const { handleBlog  } = ContextProvider()
   const [ featured, isFeatured ] = useState(false)
   const [ content, setContent ] = useState('')
+  const [ preview, setPreview ] = useState()
+  const [ image, setImage ] = useState() 
   const [ credential, setCredential ] = useState({
     title: '',
     author: '',
@@ -44,19 +49,6 @@ export default function Blog() {
     })
   }
 
-  async function uploadThumb(e) {
-    let img = e.target.files[0]
-    if (img.size <= 5000000) {
-      try {
-        await handleImageUpload('blog', img)
-      } catch (err) {
-        console.log(err)
-      }
-    } else {
-      console.log('File nya kegedean')
-    }
-  }
-
   async function onSubmit() {
     let data = {
       uid: uuid(),
@@ -64,17 +56,45 @@ export default function Blog() {
       title: credential.title,
       author: credential.author,
       content: content,
-      thumbnail: imageURL,
+      thumbnail: image,
       isFeatured: featured,
     }
+
+    const parentRef = ref(storage, "blog")
+    const imageRef = ref(parentRef, data.uid)
     
-    try {
-      await handleBlog(data)
-      console.table(data)
-    } catch(err) {
-      console.log(err)
+    if (image != undefined) {
+      try {
+        await uploadBytes(imageRef, image)
+        .then(() => {
+          getDownloadURL(imageRef)
+            .then((url) => {
+              data.thumbnail = url
+              handleBlog(data)
+            })
+        })
+      } catch(err) {
+        console.log(err)
+      }
+    } else {
+      console.log('Ada error')
     }
   }  
+
+  function handleImageUpload(e) {
+    let image = e.target.files[0]
+    const reader = new FileReader()
+
+    if (image.size <= 5000000) {
+      setImage(image)
+      reader.onloadend = () => {
+        setPreview(reader.result)
+      }
+      reader.readAsDataURL(image)
+    } else {
+      console.log('File lu kegedean')
+    }
+  }
 
   return (
     <main>
@@ -84,10 +104,16 @@ export default function Blog() {
       <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
         <input type="text" name="title" placeholder="Title" onChange={handleChange}/> <br />
         <input type="text" name="author" placeholder="Author" onChange={handleChange}/> <br />
-        <input type="file" name="thumbnail" onChange={uploadThumb}/>
-        {imageURL && 
-          <img src={imageURL} alt="preview-thumbnail" width={300}/>
-        }
+        <input type="file" name="thumbnail" onChange={handleImageUpload}/>
+        {preview && 
+        <div style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
+          <Image 
+            src={preview} 
+            alt="preview" 
+            layout="fill"
+            objectFit="contain"
+          />
+        </div>        }
         <RichTextEditor editor={editor}>
           <RichTextEditor.Toolbar sticky stickyOffset={60}>
           <RichTextEditor.ControlsGroup>
