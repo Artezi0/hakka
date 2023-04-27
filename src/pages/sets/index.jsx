@@ -11,10 +11,10 @@ export default function Sets() {
     price : '',
     stock : '',
   })
+  
 
   function onChange(e) {
     const { name, value } = e.target
-    
     setCredential((prev) => {
       return {
         ...prev,
@@ -27,7 +27,20 @@ export default function Sets() {
     console.table(credential)
   }
 
-  console.log(credential)
+  function addProduct() {
+    // let product = {
+    //   name: 'Product 1',
+    //   sizes: ['s', 'm', 'l']
+    // }
+  }
+  
+  //     uploadMultipleFiles(e) {
+  //         this.fileObj.push(e.target.files)
+  //         for (let i = 0; i < this.fileObj[0].length; i++) {
+  //             this.fileArray.push(URL.createObjectURL(this.fileObj[0][i]))
+  //         }
+  //         this.setState({ file: this.fileArray })
+  //     }
 
   return (
     <main>
@@ -37,19 +50,17 @@ export default function Sets() {
       </div>
       <hr />
       <form action="">
-        {/* 
-          1. Set name -
-          2. Description -
-          3. Category
-          4. Price -
-          5. Product included
-          6. Available stock - 
-          7. Images
-
-          id-ID IDR
-        */}
         <input type="text" name="name" placeholder="Name" onChange={onChange}/>
         <textarea name="description" placeholder="Description" onChange={onChange}></textarea>
+        <Select 
+          name="category"
+          placeholder="Category"
+          isMulti
+        />
+        <Select 
+          name="volume"
+          placeholder="Volume"
+        />
         <CurrencyInput 
           name="price"
           placeholder="Price"

@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { setDoc, collection, onSnapshot, updateDoc, doc } from "firebase/firestore"
 import { ref, deleteObject } from "firebase/storage"
 import { db, storage  } from "./Firebase"
-import uuid from "react-uuid"
 
 const Context = createContext()
 
@@ -35,18 +34,12 @@ export function ContextFunctions({ children }) {
     })
   }
 
-  async function handleAbort(path, fileUID) {
-    const parrentRef = ref(storage, path)
-    const objectRef = ref(parrentRef, fileUID)
-
-    return deleteObject(objectRef)
-  }
+  // Upload Sets
 
   return (
     <Context.Provider value={{
       handleCampaign,
       handleBlog,
-      handleAbort,
     }}>{ children }</Context.Provider>
   )
 }
