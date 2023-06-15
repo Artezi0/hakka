@@ -17,11 +17,11 @@ export default function Sets() {
   const { handleProduct } = ContextProvider()
   const [ credential, setCredential ] = useState({
     uid : uuid(),
+    dateAdded : new Date().getDate(),
     name : '',
     description : '',
     link : '',
     price : '',
-    stock : ''
   })
   
   useEffect(() => {
@@ -104,14 +104,14 @@ export default function Sets() {
         <meta name="description" content="Admin panel for Hakka" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-      <main>
-        <div>
+      <main className="product">
+        <div className="product_header">
           <h1>Upload Product</h1>
           <Link href="/">Go Back</Link>
         </div>
         <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
           <input type="text" name="name" placeholder="Name" onChange={onChange} required/> <br />
-          <textarea name="description" placeholder="Description" onChange={onChange} required></textarea> <br />
+          <input type="text" name="description" placeholder="Description" onChange={onChange} required/> <br />
           <input type="text" name="link" placeholder="Link Affiliate" onChange={onChange} required/> <br />
           {preview &&
             <Image 
@@ -125,13 +125,12 @@ export default function Sets() {
           <label htmlFor="images">Product Images</label>
           <input type="file" name="images" id="images" multiple accept="image/*" onChange={handleImageUpload} required/><br />
           <input type="number" name="price" placeholder="Price" onChange={onChange} required />
-          <input type="number" name="stock" placeholder="Stock" onChange={onChange} required />
           <button type="submit">Submit</button>
         </form>
         <hr />
         <div>
           <ul>
-          {data.length < 1 ? <p>No product</p> : data.map(({uid, name, image, description, price, stock}) => {
+          {data.length < 1 ? <p>No product</p> : data.map(({uid, name, image, description, price, dateAdded}) => {
             return (
               <li key={uid}>
                 <Image 
@@ -144,7 +143,7 @@ export default function Sets() {
                 <h2>{name}</h2>
                 <p>{description}</p>
                 <p>{price}</p>
-                <p>{stock}</p>
+                <p>{dateAdded}</p>
                 <button type="button" onClick={() => onDelete(uid)}>Delete</button>
               </li>
             )

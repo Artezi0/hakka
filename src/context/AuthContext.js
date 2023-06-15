@@ -37,11 +37,11 @@ export function ContextFunctions({ children }) {
     return setDoc(doc(db, "product", data.uid), {
       uid: data.uid,
       name: data.name,
+      dateAdded: data.dateAdded,
       description: data.description,
       link: data.link,
       price: data.price,
       image: url,
-      stock : data.stock
     }).then(() => {
       console.table(data)
     })
