@@ -1,19 +1,17 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import { setDoc, collection, onSnapshot, updateDoc, doc } from "firebase/firestore"
-import { ref, deleteObject } from "firebase/storage"
-import { db, storage  } from "./Firebase"
+import { createContext, useContext } from "react"
+import { setDoc, doc } from "firebase/firestore"
+import { db  } from "./Firebase"
 
 const Context = createContext()
 
 export function ContextFunctions({ children }) {
-  const [ imageURL, setImageURL ] = useState()
-
+  
   // Upload campaign
   async function handleCampaign(data) {
     return setDoc(doc(db, "campaign", data.uid), { 
-      image : data.image,
-      url : data.redirectURL,
-      uid : data.uid
+      image: data.image,
+      url: data.redirectURL,
+      uid: data.uid
     }).then(() => {
       console.table(data)
     })
@@ -34,12 +32,26 @@ export function ContextFunctions({ children }) {
     })
   }
 
-  // Upload Sets
+  // Upload product
+  async function handleProduct(data, url) {
+    return setDoc(doc(db, "product", data.uid), {
+      uid: data.uid,
+      name: data.name,
+      description: data.description,
+      link: data.link,
+      price: data.price,
+      image: url,
+      stock : data.stock
+    }).then(() => {
+      console.table(data)
+    })
+  }
 
   return (
     <Context.Provider value={{
       handleCampaign,
       handleBlog,
+      handleProduct,
     }}>{ children }</Context.Provider>
   )
 }

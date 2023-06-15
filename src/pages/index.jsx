@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>HAKKA - Admin Panel</title>
+        <title>HAKKA Admin</title>
         <meta name="description" content="Admin panel for Hakka" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -14,7 +14,7 @@ export default function Home() {
         <ul>
           <li><Link href='/campaign'>Campaign</Link></li>
           <li><Link href='/blog'>Blog</Link></li>
-          <li><Link href='/sets'>Sets</Link></li>
+          <li><Link href='/product'>Product</Link></li>
         </ul>
       </main>
     </>

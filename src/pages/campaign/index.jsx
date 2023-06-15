@@ -1,4 +1,5 @@
 import uuid from "react-uuid"
+import Head from "next/head"
 import Link from "next/link"
 import Image from "next/legacy/image"
 import { useState, useEffect } from "react"
@@ -88,48 +89,55 @@ export default function Campaign() {
   }
   
   return (
-    <main className="campaign">
-      <header className="campaign_header">
-        <h1>Upload Campaign</h1>
-        <Link href="/">Go Back</Link>
-      </header>
-      <section className="campaign_input">
-        <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
-          <div className="campaign_input-img">
-            <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e)} required/>
-            {preview && 
-              <div className="img_preview" style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
-                <Image src={preview} alt="preview" layout="fill" objectFit="contain"/>
-              </div>
-            } 
-            <label>Recomended image size 1128 px x 500 px. Max file size 5 mb</label>
-          </div>
-          <div className="campaign_input-redirect">
-            <input type="text" name="redirectURL" placeholder="Redirect URL" onChange={(e) => setRedirect(e.target.value)}/>
-          </div>
-          <button type="submit">Submit</button>
-        </form>
-      </section>
-      <hr />
-      <section className="campaign_list">
-        <ul>
-          {data.length < 1 ? <p>No campaign</p> : data.map(({ uid, url, image }) => {
-            return (
-              <li key={uid}>
-                <Image 
-                  width={100}
-                  height={50}
-                  src={image} 
-                  alt="preview"
-                  /> 
-                <br />
-                <a href={url} target="_blank">Redirect Link</a>
-                <button type="button" onClick={() => onDelete(uid)}>Delete</button>
-              </li>
-            )
-          })}
-        </ul>
-      </section>
-    </main>
+    <>
+     <Head>
+        <title>HAKKA Admin - Campaign</title>
+        <meta name="description" content="Admin panel for Hakka" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <main className="campaign">
+        <header className="campaign_header">
+          <h1>Upload Campaign</h1>
+          <Link href="/">Go Back</Link>
+        </header>
+        <section className="campaign_input">
+          <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
+            <div className="campaign_input-img">
+              <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e)} required/>
+              {preview && 
+                <div className="img_preview" style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
+                  <Image src={preview} alt="preview" layout="fill" objectFit="contain"/>
+                </div>
+              } 
+              <label>Recomended image size 1128 px x 500 px. Max file size 5 mb</label>
+            </div>
+            <div className="campaign_input-redirect">
+              <input type="text" name="redirectURL" placeholder="Redirect URL" onChange={(e) => setRedirect(e.target.value)}/>
+            </div>
+            <button type="submit">Submit</button>
+          </form>
+        </section>
+        <hr />
+        <section className="campaign_list">
+          <ul>
+            {data.length < 1 ? <p>No campaign</p> : data.map(({ uid, url, image }) => {
+              return (
+                <li key={uid}>
+                  <Image 
+                    width={100}
+                    height={50}
+                    src={image} 
+                    alt="preview"
+                    /> 
+                  <br />
+                  <a href={url} target="_blank">Redirect Link</a>
+                  <button type="button" onClick={() => onDelete(uid)}>Delete</button>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      </main>
+    </>
   )
 }

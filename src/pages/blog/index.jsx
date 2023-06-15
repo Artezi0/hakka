@@ -2,6 +2,7 @@ import { ContextProvider } from "@/context/AuthContext"
 import { useState, useEffect } from "react"
 import uuid from "react-uuid"
 import Link from "next/link"
+import Head from "next/head"
 import { storage } from "@/context/Firebase"
 import { uploadBytes, getDownloadURL, ref, deleteObject } from "firebase/storage"
 import { onSnapshot, collection, deleteDoc, doc } from "firebase/firestore"
@@ -68,7 +69,7 @@ export default function Blog() {
   async function onSubmit() {
     let data = {
       uid: uuid(),
-      dateCreated: new Date().toLocaleDateString(),
+      dateCreated: new Date().toDateString().split(' ').slice(1).join(' '),
       title: credential.title,
       author: credential.author,
       content: content,
@@ -128,55 +129,64 @@ export default function Blog() {
   }
 
   return (
-    <main className="blog">
-      <header className="blog_header">
-        <h1>Blog</h1>
-        <Link href="/">Go Back</Link>
-      </header>
-      <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
-        <input type="text" name="title" placeholder="Title" onChange={handleChange}/> <br />
-        <input type="text" name="author" placeholder="Author" onChange={handleChange}/> <br />
-        <input type="file" name="thumbnail" onChange={handleImageUpload}/>
-        {preview && 
-        <div style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
-          <Image 
-            src={preview} 
-            alt="preview" 
-            layout="fill"
-            objectFit="contain"
-          />
-        </div>        }
-        <RichTextEditor editor={editor}>
-          <Toolbar />
-          <RichTextEditor.Content />
-        </RichTextEditor>
-        <label htmlFor="featured">Featured</label>
-        <input type="checkbox" id="featured" name="featured" onChange={() => isFeatured(!featured)}/> <br />
-        <button type="submit">Post</button>
-      </form>
+    <>
+     <Head>
+        <title>HAKKA Admin - Blog</title>
+        <meta name="description" content="Admin Panel For Hakka" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <main className="blog">
+        <header className="blog_header">
+          <h1>Blog</h1>
+          <Link href="/">Go Back</Link>
+        </header>
+        <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
+          <input type="text" name="title" placeholder="Title" onChange={handleChange}/> <br />
+          <input type="text" name="author" placeholder="Author" onChange={handleChange}/> <br />
+          <input type="file" name="thumbnail" onChange={handleImageUpload}/>
+          {preview && 
+          <div style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
+            <Image 
+              src={preview} 
+              alt="preview" 
+              layout="fill"
+              objectFit="contain"
+              />
+          </div>        }
+          <RichTextEditor editor={editor}>
+            <Toolbar />
+            <RichTextEditor.Content />
+          </RichTextEditor>
+          <label htmlFor="featured">Featured</label>
+          <input type="checkbox" id="featured" name="featured" onChange={() => isFeatured(!featured)}/> <br />
+          <button type="submit">Post</button>
+        </form>
 
-      <section className="blog_list">
-        {data.length < 1 ? <p>No blog</p> : data.map(({ uid, title, author, dateCreated, isFeatured, thumbnail, content }) => {
-          return (
-            <div key={uid} className="blog">
-              <div className="blog_thumb" style={{ position: 'relative', width: '100px', height: '100px', objectFit: 'cover'}}>
-                <Image 
-                  src={thumbnail} 
-                  alt="thumbnail" 
-                  layout="fill"
-                  objectFit="contain"
-                />
+        <section className="blog_list">
+          {data.length < 1 ? <p>No blog</p> : data.map(({ uid, title, author, dateCreated, isFeatured, thumbnail, content }) => {
+            return (
+              <div key={uid} className="blog">
+                <div className="blog_thumb" style={{ position: 'relative', width: '100px', height: '100px', objectFit: 'cover'}}>
+                  <Image 
+                    src={thumbnail} 
+                    alt="thumbnail" 
+                    layout="fill"
+                    objectFit="contain"
+                    placeholder="blur"
+                    blurDataURL={thumbnail}
+                  />
+                </div>
+                {isFeatured && <p>Featured</p>}
+                <h2 className="blog_title">{title}</h2>
+                <p className="blog_author">@{author}</p>
+                <p className="blog_date">{dateCreated}</p>
+                <p className="blog_content">{content}</p>
+                <button type="button" onClick={() => onDelete(uid)}>Delete</button>
               </div>
-              {isFeatured && <p>Featured</p>}
-              <h2 className="blog_title">{title}</h2>
-              <p className="blog_author">@{author}</p>
-              <p className="blog_date">{dateCreated}</p>
-              <p className="blog_content">{content}</p>
-              <button type="button" onClick={() => onDelete(uid)}>Delete</button>
-            </div>
-          ) 
-        })}
-      </section>
-    </main>
+            ) 
+          })}
+        </section>
+      </main>
+    </>
   )
 }
