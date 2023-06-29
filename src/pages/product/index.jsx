@@ -9,6 +9,7 @@ import { storage } from "@/context/Firebase"
 import { ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage"
 import { ContextProvider } from "@/context/AuthContext"
 import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore"
+import CurrencyInput from "react-currency-input-field"
 
 export default function Sets() {
   const [ data, setData ] = useState([])
@@ -59,6 +60,7 @@ export default function Sets() {
               handleProduct(credential, url)
             })
           })
+        location.reload()
       } catch(err) {
         console.log(err)
       }
@@ -109,47 +111,55 @@ export default function Sets() {
           <h1>Upload Product</h1>
           <Link href="/">Go Back</Link>
         </div>
-        <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
-          <input type="text" name="name" placeholder="Name" onChange={onChange} required/> <br />
-          <input type="text" name="description" placeholder="Description" onChange={onChange} required/> <br />
-          <input type="text" name="link" placeholder="Link Affiliate" onChange={onChange} required/> <br />
-          {preview &&
-            <Image 
-              src={preview}
-              alt="Product images"
-              width={100}
-              height={100}
-              priority={true}
-            />
-          }
-          <label htmlFor="images">Product Images</label>
-          <input type="file" name="images" id="images" multiple accept="image/*" onChange={handleImageUpload} required/><br />
-          <input type="number" name="price" placeholder="Price" onChange={onChange} required />
-          <button type="submit">Submit</button>
-        </form>
-        <hr />
-        <div>
-          <ul>
+        <section className="product_input">
+          <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
+            <input type="text" name="name" placeholder="Name" onChange={onChange} required/> <br />
+            <input type="text" name="description" placeholder="Description" onChange={onChange} required/> <br />
+            <input type="text" name="link" placeholder="Link Affiliate" onChange={onChange} required/> <br />
+            {preview &&
+              <Image 
+                src={preview}
+                alt="Product images"
+                width={100}
+                height={100}
+              />
+            }
+            <label htmlFor="images">Product Images</label>
+            <input type="file" name="images" id="images" multiple accept="image/*" onChange={handleImageUpload} required/><br />
+            <input type="number" name="price" placeholder="Price" onChange={onChange} required />
+            <button type="submit">Submit</button>
+          </form>
+        </section>
+        <section className="campaign_list">
+          <ul className="datas">
           {data.length < 1 ? <p>No product</p> : data.map(({uid, name, image, description, price, dateAdded}) => {
             return (
-              <li key={uid}>
+              <li key={uid} className="data">
                 <Image 
                   src={image}
                   alt="Product images"
                   width={100}
                   height={100}
-                  priority={true}
                 />
-                <h2>{name}</h2>
-                <p>{description}</p>
-                <p>{price}</p>
-                <p>{dateAdded}</p>
-                <button type="button" onClick={() => onDelete(uid)}>Delete</button>
+                <div className="data_title">
+                  <p>{name}</p>
+                  <CurrencyInput 
+                    value={price}
+                    disabled={true}
+                    prefix="Rp"
+                    decimalSeparator=","
+                    groupSeparator="."
+                  />
+                </div>
+                <div className="data_btn">
+                  <button type="button">Edit</button>
+                  <button type="button" onClick={() => onDelete(uid)}>Delete</button>
+                </div>
               </li>
             )
           })}
           </ul>
-        </div>        
+        </section>        
       </main>
     </>
   ) 

@@ -1,0 +1,148 @@
+* {
+  background: white;
+  color: black;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+
+  button {
+    cursor: pointer;
+  }
+  
+  .datas {
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 1fr;
+    
+    .data {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+    
+      &_btn {
+        display: flex;
+        gap: 10px;
+      }
+    }
+  }
+}
+
+.campaign {
+  width: 100%;
+  height: fit-content;
+  min-height: 100vh;
+  padding: 40px;
+
+  &_header {
+    padding: 20px 0;
+  }
+
+  &_input {
+    padding: 20px 0;
+    border-bottom: 1px solid black;
+ 
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      label {
+        display: block;
+        color: grey;
+        font-size: 80%;
+      }
+
+      button {
+        width: fit-content;
+      }
+    }
+  }
+
+  &_list {
+    padding: 20px 0;
+  }
+}
+
+.blog {
+  width: 100%;
+  height: fit-content;
+  min-height: 100vh;
+  padding: 40px;
+
+  &_header {
+    padding: 20px 0;
+  }
+
+  &_input {
+    padding: 20px 0;
+    border-bottom: 1px solid black;
+ 
+    form {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        display: block;
+        color: grey;
+        font-size: 80%;
+      }
+
+      button {
+        width: fit-content;
+      }
+    }
+  }
+
+  &_list {
+    padding: 20px 0;
+
+    .datas {
+      .data {
+        gap: 10px;
+      }
+    }
+  }
+}
+
+.product {
+  width: 100%;
+  height: fit-content;
+  min-height: 100vh;
+  padding: 40px;
+
+  &_header {
+    padding: 20px 0;
+  }
+
+  &_input {
+    padding: 20px 0;
+    border-bottom: 1px solid black;
+ 
+    form {
+      display: flex;
+      flex-direction: column;
+
+      input {
+        width: fit-content;
+      }
+
+      label {
+        display: block;
+        color: grey;
+        font-size: 80%;
+      }
+
+      button {
+        width: fit-content;
+      }
+    }
+  }
+
+  &_list {
+    padding: 20px 0;
+  }
+}

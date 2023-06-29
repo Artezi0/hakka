@@ -15,6 +15,7 @@ export default function Campaign() {
   const [ preview, setPreview ] = useState()
   const [ image, setImage ] = useState()
   const [ data, setData ] = useState([])
+  const [ error, setError ] = useState("")
 
   useEffect(() => {
     onSnapshot(collection(db, 'campaign'), (snapshot) => {
@@ -108,7 +109,7 @@ export default function Campaign() {
                 <div className="img_preview" style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
                   <Image src={preview} alt="preview" layout="fill" objectFit="contain"/>
                 </div>
-              } 
+              }
               <label>Recomended image size 1128 px x 500 px. Max file size 5 mb</label>
             </div>
             <div className="campaign_input-redirect">
@@ -117,21 +118,24 @@ export default function Campaign() {
             <button type="submit">Submit</button>
           </form>
         </section>
-        <hr />
         <section className="campaign_list">
-          <ul>
+          <ul className="datas">
             {data.length < 1 ? <p>No campaign</p> : data.map(({ uid, url, image }) => {
               return (
-                <li key={uid}>
+                <li key={uid} className="data">
                   <Image 
-                    width={100}
-                    height={50}
+                    width={200}
+                    height={100}
                     src={image} 
                     alt="preview"
-                    /> 
+
+                  /> 
                   <br />
-                  <a href={url} target="_blank">Redirect Link</a>
-                  <button type="button" onClick={() => onDelete(uid)}>Delete</button>
+                  {url !== "" && <a href={url} target="_blank">Redirect Link</a>}
+                  <div className="data_btn">
+                    <button type="button">Edit</button>
+                    <button type="button" onClick={() => onDelete(uid)}>Delete</button>
+                  </div>
                 </li>
               )
             })}

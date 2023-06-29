@@ -90,6 +90,7 @@ export default function Blog() {
               handleBlog(data)
             })
         })
+        location.reload() // Temporary fix
       } catch(err) {
         console.log(err)
       }
@@ -140,51 +141,54 @@ export default function Blog() {
           <h1>Blog</h1>
           <Link href="/">Go Back</Link>
         </header>
-        <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
-          <input type="text" name="title" placeholder="Title" onChange={handleChange}/> <br />
-          <input type="text" name="author" placeholder="Author" onChange={handleChange}/> <br />
-          <input type="file" name="thumbnail" onChange={handleImageUpload}/>
-          {preview && 
-          <div style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
-            <Image 
-              src={preview} 
-              alt="preview" 
-              layout="fill"
-              objectFit="contain"
-              />
-          </div>        }
-          <RichTextEditor editor={editor}>
-            <Toolbar />
-            <RichTextEditor.Content />
-          </RichTextEditor>
-          <label htmlFor="featured">Featured</label>
-          <input type="checkbox" id="featured" name="featured" onChange={() => isFeatured(!featured)}/> <br />
-          <button type="submit">Post</button>
-        </form>
-
+        <section>
+          <form onSubmit={(e) => e.preventDefault() & onSubmit()}>
+            <input type="text" name="title" placeholder="Title" onChange={handleChange}/> <br />
+            <input type="text" name="author" placeholder="Author" onChange={handleChange}/> <br />
+            <input type="file" name="thumbnail" onChange={handleImageUpload}/>
+            {preview && 
+            <div style={{ position: 'relative', width: '200px', height: '200px', objectFit: 'cover'}}>
+              <Image 
+                src={preview} 
+                alt="preview" 
+                layout="fill"
+                objectFit="contain"
+                />
+            </div>        }
+            <RichTextEditor editor={editor}>
+              <Toolbar />
+              <RichTextEditor.Content />
+            </RichTextEditor>
+            <label htmlFor="featured">Featured</label>
+            <input type="checkbox" id="featured" name="featured" onChange={() => isFeatured(!featured)}/> <br />
+            <button type="submit">Post</button>
+          </form>
+        </section>
         <section className="blog_list">
+          <ul className="datas">
           {data.length < 1 ? <p>No blog</p> : data.map(({ uid, title, author, dateCreated, isFeatured, thumbnail, content }) => {
             return (
-              <div key={uid} className="blog">
-                <div className="blog_thumb" style={{ position: 'relative', width: '100px', height: '100px', objectFit: 'cover'}}>
-                  <Image 
-                    src={thumbnail} 
-                    alt="thumbnail" 
-                    layout="fill"
-                    objectFit="contain"
-                    placeholder="blur"
-                    blurDataURL={thumbnail}
-                  />
+              <ul key={uid} className="data">
+                <Image className="data_img"
+                  width={100}
+                  height={100}
+                  objectFit="cover"
+                  src={thumbnail} 
+                  alt="thumbnail" 
+                />
+                <div className="data_title">
+                  {isFeatured && <p>Featured</p>}
+                  <p className="blog_title">{title}</p>
                 </div>
-                {isFeatured && <p>Featured</p>}
-                <h2 className="blog_title">{title}</h2>
-                <p className="blog_author">@{author}</p>
-                <p className="blog_date">{dateCreated}</p>
-                <p className="blog_content">{content}</p>
-                <button type="button" onClick={() => onDelete(uid)}>Delete</button>
-              </div>
+                <div className="data_btn">
+                  <button type="button">View</button>
+                  <button type="button">Edit</button>
+                  <button type="button" onClick={() => onDelete(uid)}>Delete</button>
+                </div>
+              </ul>
             ) 
           })}
+          </ul>
         </section>
       </main>
     </>
